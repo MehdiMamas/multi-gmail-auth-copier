@@ -5,16 +5,17 @@ const KEY = 'otpState';
 
 export async function loadState(): Promise<PersistedState> {
   const stored = await browser.storage.local.get(KEY);
-  const raw = stored[KEY] as Partial<PersistedState> | undefined;
+  const raw = stored[KEY] as (Partial<PersistedState> & { multiUnlocked?: boolean }) | undefined;
   if (!raw) return structuredClone(EMPTY_STATE);
+  const rest = { ...raw };
+  delete rest.multiUnlocked;
   return {
     ...structuredClone(EMPTY_STATE),
-    ...raw,
+    ...rest,
     settings: { ...EMPTY_STATE.settings, ...raw.settings },
     accounts: raw.accounts ?? [],
     codes: raw.codes ?? [],
     processedIds: raw.processedIds ?? [],
-    multiUnlocked: raw.multiUnlocked ?? false,
   };
 }
 
@@ -29,7 +30,6 @@ export function toPublicState(state: PersistedState): PublicState {
     settings: state.settings,
     unseen: state.unseen,
     lastSyncedAt: state.lastSyncedAt,
-    multiUnlocked: state.multiUnlocked,
   };
 }
 

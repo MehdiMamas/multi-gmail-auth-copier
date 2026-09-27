@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Keytray</title>
+    <meta
+      name="description"
+      content="Keytray is a browser extension that reads verification codes from your Gmail accounts and can fill or copy them. Mail stays in your browser."
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="wrap bar">
+        <a class="brand" href="index.html">Keytray</a>
+        <nav>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+          <a href="https://github.com/MehdiMamas/multi-gmail-auth-copier">Source</a>
+        </nav>
+      </div>
+    </header>
+    <main class="wrap">
+      <h1>Keytray</h1>
+      <p class="lede">
+        Keytray is a browser extension for Chrome, Edge, and Brave. Its purpose is to read verification
+        codes from one or more Gmail accounts you connect. For each new code it can fill the page, copy
+        the code, or only show it in the popup.
+      </p>
+      <div class="card">
+        <p>
+          Nothing is hosted. The extension talks to Gmail from your browser with the
+          <strong>Gmail readonly</strong> scope. Email bodies are used to find a code and are not saved.
+          Stored items are the code, sender, subject, and time, kept in this browser only.
+        </p>
+      </div>
+      <h2>What it does</h2>
+      <ul>
+        <li>Connect more than one Gmail account and list recent codes in the popup.</li>
+        <li>Check for new codes in the background, or sync on demand.</li>
+        <li>Auto-fill a code field, copy the code, or do nothing, per account.</li>
+        <li>Show a Fill chip on a detected code field when a recent code is stored.</li>
+      </ul>
+      <h2>Why it asks for Gmail access</h2>
+      <p>
+        Keytray requests the Gmail readonly scope only to find verification codes in mail you already
+        receive. Message bodies are read in this browser and are not saved. Codes, tokens, and mail are
+        not sent to a server run for this project. The developer does not receive them.
+      </p>
+      <p>
+        The privacy policy is in this repository at
+        <a href="privacy.html">docs/privacy.html</a>.
+      </p>
+      <h2>Google access</h2>
+      <p>
+        Sign-in uses Google OAuth. The extension requests
+        <code>https://www.googleapis.com/auth/gmail.readonly</code> and
+        <code>https://www.googleapis.com/auth/userinfo.email</code>. It does not send, delete, or modify
+        mail. You can disconnect an account in the extension settings and revoke access in your
+        <a href="https://myaccount.google.com/permissions">Google Account permissions</a>.
+      </p>
+      <h2>Install</h2>
+      <p>
+        This extension is not published. Install it unpacked from the
+        <a href="https://github.com/MehdiMamas/multi-gmail-auth-copier">GitHub repository</a>.
+        Setup steps are in <a href="https://github.com/MehdiMamas/multi-gmail-auth-copier/blob/main/SETUP.md">SETUP.md</a>.
+        You may use, copy, modify, and share the source. You may not sell the project or charge for a copy.
+        See the <a href="https://github.com/MehdiMamas/multi-gmail-auth-copier/blob/main/LICENSE">LICENSE</a>.
+      </p>
+    </main>
+    <footer>
+      <div class="wrap">
+        <p>
+          <a href="privacy.html">Privacy policy</a>
+          ·
+          <a href="terms.html">Terms of service</a>
+        </p>
+        <p>Keytray is an independent project and is not affiliated with Google.</p>
+      </div>
+    </footer>
+  </body>
+</html>

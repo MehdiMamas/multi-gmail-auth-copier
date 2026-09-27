@@ -1,17 +1,23 @@
 ---
-description: Keep the mehdimamas.dev OAuth home page, privacy policy, and terms in sync with the extension
+description: Keep the Keytray home page, privacy policy, and terms in sync with the extension
 alwaysApply: true
 ---
 
 # Public pages stay accurate
 
-The OAuth consent screen points at unlisted static pages on the personal site. A change that makes any sentence on them false must update those pages in the same change.
+The home page, privacy policy, and terms live in this repository. A change that makes any sentence on them false must update those files in the same change.
+
+- Home: `docs/index.html`
+- Privacy: `docs/privacy.html`
+- Terms: `docs/terms.html`
+
+The same pages are also static files on the personal site, because an existing OAuth consent screen may still point at them. Keep those copies in sync when the repo pages change. Do not host these pages on GitHub Pages. Do not link them from the site navigation, home page, or project list.
 
 - Home: `D:\Upwork\mehdimamas.dev\public\gmail-otp-copier\index.html` → https://mehdimamas.dev/gmail-otp-copier/
 - Privacy: `D:\Upwork\mehdimamas.dev\public\gmail-otp-copier\privacy.html` → https://mehdimamas.dev/gmail-otp-copier/privacy/
 - Terms: `D:\Upwork\mehdimamas.dev\public\gmail-otp-copier\terms.html` → https://mehdimamas.dev/gmail-otp-copier/terms/
 
-Do not host these pages on GitHub Pages. Do not link them from the site navigation, home page, or project list. They are static files in `public/`, outside the site layout. Leave the rewrites in `D:\Upwork\mehdimamas.dev\next.config.mjs` so the clean URLs keep serving the HTML files.
+They are static files in `public/`, outside the site layout. Leave the rewrites in `D:\Upwork\mehdimamas.dev\next.config.mjs` so the clean URLs keep serving the HTML files.
 
 ## Update the pages when a change affects
 
