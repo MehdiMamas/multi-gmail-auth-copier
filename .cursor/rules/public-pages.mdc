@@ -1,15 +1,19 @@
 ---
-description: Keep the GitHub Pages home page, privacy policy, and terms in sync with the extension
+description: Keep the mehdimamas.dev OAuth home page, privacy policy, and terms in sync with the extension
 alwaysApply: true
 ---
 
 # Public pages stay accurate
 
-The OAuth consent screen points at these GitHub Pages files. A change that makes any sentence on them false must update the pages in the same change.
+The OAuth consent screen points at unlisted static pages on mehdimamas.dev. A change that makes any sentence on them false must update those pages in the same change.
 
-- Home: `docs/index.html` → https://mehdimamas.github.io/multi-gmail-auth-copier/
-- Privacy: `docs/privacy.html` → https://mehdimamas.github.io/multi-gmail-auth-copier/privacy.html
-- Terms: `docs/terms.html` → https://mehdimamas.github.io/multi-gmail-auth-copier/terms.html
+- Home: `C:\Users\Mehdi\Projects\mehdimamas.dev\public\gmail-otp-copier\index.html` → https://mehdimamas.dev/gmail-otp-copier/
+- Privacy: `C:\Users\Mehdi\Projects\mehdimamas.dev\public\gmail-otp-copier\privacy.html` → https://mehdimamas.dev/gmail-otp-copier/privacy/
+- Terms: `C:\Users\Mehdi\Projects\mehdimamas.dev\public\gmail-otp-copier\terms.html` → https://mehdimamas.dev/gmail-otp-copier/terms/
+
+`docs/` in this repo only redirects to those URLs. Do not put the policy text back on GitHub Pages.
+
+Do not link these pages from the portfolio navbar, home page, project list, or sitemap. They are static files in `public/`, so they stay outside the site chrome and analytics. Leave `next.config.js` rewrites in place so the clean URLs keep serving the HTML files.
 
 ## Update the pages when a change affects
 
@@ -24,7 +28,7 @@ Leave the pages alone for refactors, tests, and styling that do not change those
 ## How to edit them
 
 - Describe only what the code does. Do not add data uses the extension does not have.
-- On `docs/privacy.html` and `docs/terms.html`, set "Last updated" to today's date when the text changes.
+- On the privacy and terms pages, set "Last updated" to today's date when the text changes.
 - Keep the Google API Services User Data Policy Limited Use sentence in the privacy policy.
 - If a README link or URL for these pages is wrong, fix it too.
-- Include the page edits in the same commit when the user asks to commit. Do not commit or push only to refresh GitHub Pages unless they asked to publish.
+- Include the page edits in the same commit when the user asks to commit. Do not commit or push only to refresh the site unless they asked to publish.

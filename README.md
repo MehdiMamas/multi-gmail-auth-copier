@@ -6,6 +6,6 @@ All rights reserved. See [SETUP.md](SETUP.md) for the Google Cloud project, test
 
 Public pages for the OAuth consent screen:
 
-- [Application home page](https://mehdimamas.github.io/multi-gmail-auth-copier/)
-- [Privacy policy](https://mehdimamas.github.io/multi-gmail-auth-copier/privacy.html)
-- [Terms of service](https://mehdimamas.github.io/multi-gmail-auth-copier/terms.html)
+- [Application home page](https://mehdimamas.dev/gmail-otp-copier/)
+- [Privacy policy](https://mehdimamas.dev/gmail-otp-copier/privacy/)
+- [Terms of service](https://mehdimamas.dev/gmail-otp-copier/terms/)
