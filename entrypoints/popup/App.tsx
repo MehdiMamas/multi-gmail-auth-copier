@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { browser } from 'wxt/browser';
+import { gmailMessageUrl } from '~/lib/gmail';
 import type { ExtensionResponse } from '~/lib/messages';
 import type { CodeEntry, PublicState } from '~/lib/types';
 
@@ -139,12 +140,20 @@ export function App() {
                   {relativeTime(entry.receivedAt)}
                 </div>
               </div>
-              <button
-                className="shrink-0 rounded-md border border-line bg-white px-2 py-1 text-xs font-semibold"
-                onClick={() => void copy(entry)}
-              >
-                {copiedId === entry.id ? 'Copied' : 'Copy'}
-              </button>
+              <div className="flex shrink-0 flex-col gap-1">
+                <button
+                  className="rounded-md border border-line bg-white px-2 py-1 text-xs font-semibold"
+                  onClick={() => void copy(entry)}
+                >
+                  {copiedId === entry.id ? 'Copied' : 'Copy'}
+                </button>
+                <button
+                  className="rounded-md border border-line bg-white px-2 py-1 text-xs font-semibold"
+                  onClick={() => void browser.tabs.create({ url: gmailMessageUrl(entry.account, entry.messageId) })}
+                >
+                  Open
+                </button>
+              </div>
             </li>
           ))}
         </ul>

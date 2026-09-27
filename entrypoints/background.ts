@@ -1,6 +1,6 @@
 import { browser } from 'wxt/browser';
 import type { ExtensionRequest, ExtensionResponse, FillResponse } from '~/lib/messages';
-import { AuthError, HistoryExpiredError, pollGmail } from '~/lib/gmail';
+import { AuthError, HistoryExpiredError, gmailMessageUrl, pollGmail } from '~/lib/gmail';
 import { extractCode } from '~/lib/extract';
 import { refreshAccessToken } from '~/lib/auth';
 import { loadState, resolveMode, saveState, toPublicState } from '~/lib/storage';
@@ -23,6 +23,9 @@ export default defineBackground(() => {
   });
   browser.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === 'poll') void enqueue(() => pollAccounts());
+  });
+  browser.notifications.onClicked.addListener((notificationId) => {
+    void openNotifiedMessage(notificationId);
   });
   browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     void handleMessage(message as ExtensionRequest)
@@ -305,6 +308,15 @@ async function copyText(text: string): Promise<void> {
       await new Promise((resolve) => setTimeout(resolve, 50));
     }
   }
+}
+
+async function openNotifiedMessage(notificationId: string): Promise<void> {
+  if (!notificationId.startsWith('code-')) return;
+  const entryId = notificationId.slice('code-'.length);
+  const state = await loadState();
+  const entry = state.codes.find((item) => item.id === entryId);
+  if (!entry) return;
+  await browser.tabs.create({ url: gmailMessageUrl(entry.account, entry.messageId) });
 }
 
 async function notify(state: PersistedState, entry: CodeEntry, detail: string): Promise<void> {

@@ -42,6 +42,12 @@ interface GmailMessage {
 
 const GMAIL = 'https://gmail.googleapis.com/gmail/v1/users/me';
 
+/** Open this message in the mailbox that received it, not the browser's first Google account. */
+export function gmailMessageUrl(email: string, messageId: string): string {
+  const params = new URLSearchParams({ authuser: email });
+  return `https://mail.google.com/mail/?${params.toString()}#all/${encodeURIComponent(messageId)}`;
+}
+
 export async function pollGmail(
   token: string,
   historyId: string | undefined,
