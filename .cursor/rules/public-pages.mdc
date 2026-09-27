@@ -5,15 +5,13 @@ alwaysApply: true
 
 # Public pages stay accurate
 
-The OAuth consent screen points at unlisted static pages on mehdimamas.dev. A change that makes any sentence on them false must update those pages in the same change.
+The OAuth consent screen points at unlisted static pages on the personal site. A change that makes any sentence on them false must update those pages in the same change.
 
-- Home: `C:\Users\Mehdi\Projects\mehdimamas.dev\public\gmail-otp-copier\index.html` → https://mehdimamas.dev/gmail-otp-copier/
-- Privacy: `C:\Users\Mehdi\Projects\mehdimamas.dev\public\gmail-otp-copier\privacy.html` → https://mehdimamas.dev/gmail-otp-copier/privacy/
-- Terms: `C:\Users\Mehdi\Projects\mehdimamas.dev\public\gmail-otp-copier\terms.html` → https://mehdimamas.dev/gmail-otp-copier/terms/
+- Home: `D:\Upwork\mehdimamas.dev\public\gmail-otp-copier\index.html` → https://mehdimamas.dev/gmail-otp-copier/
+- Privacy: `D:\Upwork\mehdimamas.dev\public\gmail-otp-copier\privacy.html` → https://mehdimamas.dev/gmail-otp-copier/privacy/
+- Terms: `D:\Upwork\mehdimamas.dev\public\gmail-otp-copier\terms.html` → https://mehdimamas.dev/gmail-otp-copier/terms/
 
-`docs/` in this repo only redirects to those URLs. Do not put the policy text back on GitHub Pages.
-
-Do not link these pages from the portfolio navbar, home page, project list, or sitemap. They are static files in `public/`, so they stay outside the site chrome and analytics. Leave `next.config.js` rewrites in place so the clean URLs keep serving the HTML files.
+Do not host these pages on GitHub Pages. Do not link them from the site navigation, home page, or project list. They are static files in `public/`, outside the site layout. Leave the rewrites in `D:\Upwork\mehdimamas.dev\next.config.mjs` so the clean URLs keep serving the HTML files.
 
 ## Update the pages when a change affects
 
