@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy policy — Gmail OTP Copier</title>
+    <meta name="description" content="Privacy policy for the Gmail OTP Copier browser extension." />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="wrap bar">
+        <a class="brand" href="./">Gmail OTP Copier</a>
+        <nav>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+          <a href="https://github.com/MehdiMamas/multi-gmail-auth-copier">Source</a>
+        </nav>
+      </div>
+    </header>
+    <main class="wrap">
+      <h1>Privacy policy</h1>
+      <p class="updated">Last updated September 26, 2026.</p>
+      <p>
+        Gmail OTP Copier is a browser extension that runs on your device. This policy describes the
+        Google user data it accesses and what happens to that data. The developer does not operate a
+        server that receives your mail, codes, or tokens.
+      </p>
+
+      <h2>Who this applies to</h2>
+      <p>
+        This policy applies to the Gmail OTP Copier extension published from
+        <a href="https://github.com/MehdiMamas/multi-gmail-auth-copier">github.com/MehdiMamas/multi-gmail-auth-copier</a>.
+        The application home page is
+        <a href="https://mehdimamas.github.io/multi-gmail-auth-copier/">mehdimamas.github.io/multi-gmail-auth-copier</a>.
+      </p>
+
+      <h2>Google data the extension accesses</h2>
+      <p>When you connect a Gmail account, you grant these OAuth scopes:</p>
+      <ul>
+        <li>
+          <code>https://www.googleapis.com/auth/gmail.readonly</code> — read mail so the extension can
+          look for verification codes.
+        </li>
+        <li>
+          <code>https://www.googleapis.com/auth/userinfo.email</code> — read the email address of the
+          account you signed in with, so it can label that mailbox.
+        </li>
+      </ul>
+      <p>Using those scopes, the extension requests from Google APIs:</p>
+      <ul>
+        <li>Your Gmail address.</li>
+        <li>A short-lived OAuth access token.</li>
+        <li>Your Gmail profile history id, used only to ask for messages added since the last check.</li>
+        <li>
+          Recent inbox messages (headers and body) so it can search the subject and body for a
+          verification code. Message bodies are processed in memory in the browser and are not written
+          to storage.
+        </li>
+      </ul>
+      <p>The extension cannot send, delete, label, or otherwise change your mail.</p>
+
+      <h2>How that data is used</h2>
+      <p>Gmail data is used only to provide the feature you turned on:</p>
+      <ul>
+        <li>Find a verification code in a new message.</li>
+        <li>Show that code in the extension popup.</li>
+        <li>Optionally fill it into a code field on the active tab, copy it to the clipboard, or show a local notification.</li>
+        <li>Open the original message in Gmail when you choose that action.</li>
+      </ul>
+      <p>
+        The extension does not use Gmail data for advertising, does not sell it, and does not transfer
+        it to the developer or to other apps. Page content is not uploaded. The content script looks for
+        a verification-code field on the page you are viewing and can fill a code that is already stored
+        locally.
+      </p>
+      <p>
+        Gmail OTP Copier's use and transfer of information received from Google APIs will adhere to the
+        <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>,
+        including the Limited Use requirements.
+      </p>
+
+      <h2>What is stored on your device</h2>
+      <p>
+        Data is stored in the browser's local extension storage (<code>chrome.storage.local</code> or
+        the equivalent in Edge or Brave). It stays on that browser profile.
+      </p>
+      <ul>
+        <li>Connected account email addresses, access tokens, token expiry, and a Gmail history id.</li>
+        <li>Up to 50 extracted codes, each with the sender, subject, and time. Email bodies are not stored.</li>
+        <li>Ids of messages already processed, so the same code is not handled twice.</li>
+        <li>Your settings (fill, copy, or do nothing; notifications; polling; fill chip).</li>
+      </ul>
+
+      <h2>What is not collected by the developer</h2>
+      <ul>
+        <li>No account is created with the developer.</li>
+        <li>No analytics, advertising, or tracking scripts run on this site or inside the extension.</li>
+        <li>Mail, codes, and tokens are not sent to a server operated for this project.</li>
+      </ul>
+      <p>
+        Requests to Google (sign-in, the userinfo endpoint, and the Gmail API) are made from your
+        browser to Google. Google's handling of those requests is covered by
+        <a href="https://policies.google.com/privacy">Google's privacy policy</a>.
+      </p>
+
+      <h2>How long data is kept</h2>
+      <p>
+        Tokens last about an hour and are refreshed while that Google account stays signed in in the
+        browser. Codes are capped at 50 entries. You can clear stored codes in the extension settings,
+        remove an account, or uninstall the extension, which removes its local storage. You can also
+        revoke the extension's access at
+        <a href="https://myaccount.google.com/permissions">Google Account permissions</a>.
+      </p>
+
+      <h2>Sharing</h2>
+      <p>
+        The developer does not share your Gmail data with third parties. A code is copied to the
+        clipboard or typed into a page only when you have enabled that behavior, or when you press Copy
+        or Fill yourself. Anyone who can use that browser profile can see the codes stored by the
+        extension.
+      </p>
+
+      <h2>Children</h2>
+      <p>The extension is not directed at children under 13, and it does not knowingly collect their data.</p>
+
+      <h2>Changes</h2>
+      <p>
+        If this policy changes, the updated text will be posted on this page with a new date. Continued
+        use of the extension after a change means you accept the updated policy.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy:
+        <a href="https://github.com/MehdiMamas/multi-gmail-auth-copier/issues">open an issue on GitHub</a>.
+      </p>
+    </main>
+    <footer>
+      <div class="wrap">
+        <p>
+          <a href="./">Home</a>
+          ·
+          <a href="terms.html">Terms of service</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
