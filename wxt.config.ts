@@ -10,7 +10,7 @@ const EXTENSION_KEY =
 export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   manifest: {
-    name: 'Gmail OTP Copier',
+    name: 'Keytray',
     description:
       'Reads verification codes from your Gmail accounts and can auto-fill or copy them.',
     key: EXTENSION_KEY,
@@ -27,7 +27,7 @@ export default defineConfig({
       128: 'icons/icon128.png',
     },
     action: {
-      default_title: 'Gmail OTP Copier',
+      default_title: 'Keytray',
       default_icon: {
         16: 'icons/icon16.png',
         32: 'icons/icon32.png',

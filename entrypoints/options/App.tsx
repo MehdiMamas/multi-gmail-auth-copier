@@ -132,7 +132,7 @@ export function App() {
 
   return (
     <main className="mx-auto max-w-xl px-6 py-8 font-sans text-ink">
-      <h1 className="text-2xl font-semibold">Gmail OTP Copier</h1>
+      <h1 className="text-2xl font-semibold">Keytray</h1>
       <p className="mt-1 text-sm text-ink/70">Codes stay in this browser. Gmail is read with the readonly scope only.</p>
       {error && <p className="mt-4 rounded-md bg-clay/10 px-3 py-2 text-sm text-clay">{error}</p>}
 

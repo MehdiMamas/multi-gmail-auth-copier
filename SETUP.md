@@ -12,7 +12,7 @@ You need a free Google Cloud project. No billing account. The OAuth app stays in
 2. Enable the **Gmail API** (APIs & Services → Library → Gmail API → Enable).
 3. APIs & Services → OAuth consent screen:
    - User type: **External**
-   - App name: Gmail OTP Copier
+   - App name: Keytray
    - Your email as support and developer contact
    - Scopes: add `https://www.googleapis.com/auth/gmail.readonly` and `https://www.googleapis.com/auth/userinfo.email`
    - Test users: add every Gmail address that will connect, including yours
