@@ -77,4 +77,4 @@ Email bodies are not stored. The extension keeps the code, sender, subject, and 
 
 ## License
 
-All rights reserved. See `LICENSE`.
+You may use, copy, modify, and share this project, including removing the donation note. You may not sell it or charge for a copy. See `LICENSE`.

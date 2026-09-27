@@ -8,6 +8,7 @@ export type ExtensionRequest =
   | { type: 'REMOVE_ACCOUNT'; email: string }
   | { type: 'SET_ACCOUNT_MODE'; email: string; mode: Mode | null }
   | { type: 'SET_SETTINGS'; settings: Partial<Settings> }
+  | { type: 'UNLOCK_MULTI' }
   | { type: 'OTP_PAGE_DETECTED' }
   | { type: 'MARK_SEEN' }
   | { type: 'FILL_OTP'; code: string; autoSubmit: boolean }

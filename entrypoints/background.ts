@@ -116,6 +116,15 @@ async function handleMessage(message: ExtensionRequest): Promise<ExtensionRespon
       });
       return { ok: true, state: toPublicState(next) };
     }
+    case 'UNLOCK_MULTI': {
+      const next = await enqueue(async () => {
+        const state = await loadState();
+        state.multiUnlocked = true;
+        await saveState(state);
+        return state;
+      });
+      return { ok: true, state: toPublicState(next) };
+    }
     case 'SET_SETTINGS': {
       const next = await enqueue(async () => {
         const state = await loadState();

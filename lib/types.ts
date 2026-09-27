@@ -36,6 +36,8 @@ export interface PersistedState {
   settings: Settings;
   unseen: number;
   lastSyncedAt: number | null;
+  /** Extra accounts were unlocked by leaving the donation page. Not a payment record. */
+  multiUnlocked: boolean;
 }
 
 export interface PublicAccount {
@@ -50,6 +52,7 @@ export interface PublicState {
   settings: Settings;
   unseen: number;
   lastSyncedAt: number | null;
+  multiUnlocked: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -67,6 +70,7 @@ export const EMPTY_STATE: PersistedState = {
   settings: DEFAULT_SETTINGS,
   unseen: 0,
   lastSyncedAt: null,
+  multiUnlocked: false,
 };
 
 export const CODE_MAX_AGE_MS = 10 * 60 * 1000;

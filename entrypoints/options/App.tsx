@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { browser } from 'wxt/browser';
 import { signInInteractive } from '~/lib/auth';
 import type { ExtensionResponse } from '~/lib/messages';
+import { DONATION_NOTE, HACKER_LINE, PAYPAL_DONATE_URL, isPaypalUrl } from '~/lib/support';
 import type { Mode, PublicState, Settings } from '~/lib/types';
 
 const MODES: { value: Mode | ''; label: string }[] = [
@@ -15,6 +16,11 @@ export function App() {
   const [state, setState] = useState<PublicState | null>(null);
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
+  const [askDonation, setAskDonation] = useState(false);
+  const [hacker, setHacker] = useState(false);
+  const stopPaypalWait = useRef<(() => void) | null>(null);
+
+  useEffect(() => () => stopPaypalWait.current?.(), []);
 
   const refresh = async () => {
     const response = (await browser.runtime.sendMessage({ type: 'GET_STATE' })) as ExtensionResponse;
@@ -41,9 +47,67 @@ export function App() {
       })) as ExtensionResponse;
       if (!response?.ok) throw new Error(response?.error || 'Could not save the account');
       if (response.state) setState(response.state);
+      setAskDonation(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign-in failed');
     } finally {
+      setBusy('');
+    }
+  };
+
+  const requestAddAccount = () => {
+    if (state && state.accounts.length >= 1 && !state.multiUnlocked) {
+      setAskDonation(true);
+      setHacker(false);
+      return;
+    }
+    void addAccount();
+  };
+
+  const unlockAndSignIn = async () => {
+    setHacker(true);
+    const response = (await browser.runtime.sendMessage({ type: 'UNLOCK_MULTI' })) as ExtensionResponse;
+    if (response?.ok && response.state) setState(response.state);
+    await addAccount();
+  };
+
+  const donate = async () => {
+    if (state?.multiUnlocked) {
+      await addAccount();
+      return;
+    }
+    setError('');
+    setBusy('donate');
+    try {
+      const tab = await browser.tabs.create({ url: PAYPAL_DONATE_URL });
+      if (tab.id == null) {
+        await unlockAndSignIn();
+        return;
+      }
+      const tabId = tab.id;
+      let settled = false;
+      const onRemoved = (id: number) => {
+        if (id === tabId) finish();
+      };
+      const onUpdated = (id: number, info: { url?: string }) => {
+        if (id === tabId && info.url && !isPaypalUrl(info.url)) finish();
+      };
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        browser.tabs.onRemoved.removeListener(onRemoved);
+        browser.tabs.onUpdated.removeListener(onUpdated);
+        stopPaypalWait.current = null;
+        void unlockAndSignIn();
+      };
+      browser.tabs.onRemoved.addListener(onRemoved);
+      browser.tabs.onUpdated.addListener(onUpdated);
+      stopPaypalWait.current = () => {
+        browser.tabs.onRemoved.removeListener(onRemoved);
+        browser.tabs.onUpdated.removeListener(onUpdated);
+      };
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not open PayPal');
       setBusy('');
     }
   };
@@ -78,11 +142,24 @@ export function App() {
           <button
             className="rounded-md bg-moss px-3 py-1.5 text-sm font-semibold text-paper disabled:opacity-60"
             disabled={busy !== ''}
-            onClick={() => void addAccount()}
+            onClick={requestAddAccount}
           >
             {busy === 'add' ? 'Waiting for Google…' : 'Add account'}
           </button>
         </div>
+        {askDonation && (
+          <div className="mt-3 rounded-lg border border-line bg-white px-3 py-3 text-sm">
+            <p>{DONATION_NOTE}</p>
+            {hacker && <p className="mt-2 font-medium">{HACKER_LINE}</p>}
+            <button
+              className="mt-3 rounded-md bg-moss px-3 py-1.5 text-sm font-semibold text-paper disabled:opacity-60"
+              disabled={busy !== ''}
+              onClick={() => void donate()}
+            >
+              {busy === 'donate' ? 'Leave the PayPal page to unlock…' : 'Donate $1'}
+            </button>
+          </div>
+        )}
         {state.accounts.length === 0 ? (
           <p className="mt-3 text-sm text-ink/70">No accounts connected.</p>
         ) : (

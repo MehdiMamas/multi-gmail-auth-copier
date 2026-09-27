@@ -14,6 +14,7 @@ export async function loadState(): Promise<PersistedState> {
     accounts: raw.accounts ?? [],
     codes: raw.codes ?? [],
     processedIds: raw.processedIds ?? [],
+    multiUnlocked: raw.multiUnlocked ?? false,
   };
 }
 
@@ -28,6 +29,7 @@ export function toPublicState(state: PersistedState): PublicState {
     settings: state.settings,
     unseen: state.unseen,
     lastSyncedAt: state.lastSyncedAt,
+    multiUnlocked: state.multiUnlocked,
   };
 }
 
