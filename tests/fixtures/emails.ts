@@ -78,4 +78,10 @@ export const emailFixtures: EmailFixture[] = [
     body: 'Code 246810 requested on 12/05/2024.',
     expect: '246810',
   },
+  {
+    name: 'club hub invite is not a code',
+    subject: 'Club Hub · New Event: Break Through Tech',
+    body: 'You are invited to a new event for Girls Who Code: Break Through Tech. Add to calendar: https://outlook.office.com/calendar/0/deeplink/compose?body=Girls+Who+Code+%E2%80%94+First+Meeting%21+%F0%9F%8E%89%0D%0AJoin+us+for+our+kickoff',
+    expect: null,
+  },
 ];

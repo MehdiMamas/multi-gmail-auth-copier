@@ -16,10 +16,12 @@ interface Candidate {
  * Returns null when the message does not look like a code email.
  */
 export function extractCode(subject: string, body: string): string | null {
-  const text = `${subject}\n${body}`;
+  const subjectText = stripUrls(subject);
+  const bodyText = stripUrls(body);
+  const text = `${subjectText}\n${bodyText}`;
   if (!KEYWORD.test(text)) return null;
 
-  const subjectEnd = subject.length;
+  const subjectEnd = subjectText.length;
   const candidates: Candidate[] = [];
 
   const digitRe = /(?<![A-Za-z0-9])(\d{3,4}[\s-]\d{3,4}|\d{4,8})(?![A-Za-z0-9])/g;
@@ -65,6 +67,10 @@ export function extractCode(subject: string, body: string): string | null {
 
   if (!best || best.score < 1) return null;
   return best.code;
+}
+
+function stripUrls(value: string): string {
+  return value.replace(/https?:\/\/\S+/gi, ' ');
 }
 
 function nearestKeywordDistance(text: string, index: number): number {
