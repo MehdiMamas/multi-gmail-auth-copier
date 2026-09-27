@@ -146,7 +146,7 @@ export function App() {
           </select>
         </label>
         <Toggle
-          label="Notifications"
+          label="Desktop notification when a code arrives"
           checked={state.settings.notifications}
           onChange={(notifications) => void updateSettings({ notifications })}
         />

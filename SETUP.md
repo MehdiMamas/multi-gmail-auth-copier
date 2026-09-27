@@ -75,6 +75,6 @@ Email bodies are not stored. The extension keeps the code, sender, subject, and 
 
 `npm test` covers code extraction and the page fixtures in `test-pages/`. Open `test-pages/index.html` in a browser with the extension loaded to try detection by hand.
 
-## Sharing the source
+## License
 
-AGPL-3.0 applies when you give someone a build. Ship this repository (or a link to it) with the zip.
+All rights reserved. See `LICENSE`.

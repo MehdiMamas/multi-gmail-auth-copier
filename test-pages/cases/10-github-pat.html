@@ -11,10 +11,8 @@
     <div class="expect no">Should NOT show icon &mdash; this is a developer credential being displayed</div>
 
     <p style="font-size: 13px; color: #555;">
-        Regression test for
-        <a href="https://github.com/aheimowitz/ente-auth-extension/issues/11" target="_blank">issue #11</a>:
-        the extension was overwriting a freshly-generated GitHub PAT with a 6-digit
-        TOTP code. Two variants below — both should be ignored.
+        A freshly generated GitHub personal access token must not be treated as a
+        verification code. The variants below should be ignored.
     </p>
 
     <h2 style="font-size: 14px; margin-top: 28px;">Variant A: readonly display of generated PAT</h2>

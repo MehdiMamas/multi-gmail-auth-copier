@@ -4,5 +4,5 @@
     "strict": true,
     "jsx": "react-jsx"
   },
-  "exclude": ["node_modules", ".output", "ente-auth-extension", "ente-auth-extension-master", "auth-extension"]
+  "exclude": ["node_modules", ".output"]
 }

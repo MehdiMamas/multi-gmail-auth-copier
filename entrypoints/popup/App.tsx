@@ -159,9 +159,27 @@ export function App() {
         </ul>
       )}
 
-      <p className="px-3 py-2 text-[11px] text-ink/45">
-        {state.lastSyncedAt ? `Last synced ${relativeTime(state.lastSyncedAt)}` : 'Not synced yet'}
-      </p>
+      <div className="flex items-center justify-between gap-3 px-3 py-2">
+        <p className="text-[11px] text-ink/45">
+          {state.lastSyncedAt ? `Last synced ${relativeTime(state.lastSyncedAt)}` : 'Not synced yet'}
+        </p>
+        <label className="flex shrink-0 items-center gap-1.5 text-[11px] text-ink/70">
+          Notify
+          <input
+            type="checkbox"
+            checked={state.settings.notifications}
+            onChange={(event) => {
+              const notifications = event.target.checked;
+              void browser.runtime
+                .sendMessage({ type: 'SET_SETTINGS', settings: { notifications } })
+                .then((response) => {
+                  const result = response as ExtensionResponse;
+                  if (result?.ok && result.state) setState(result.state);
+                });
+            }}
+          />
+        </label>
+      </div>
     </Shell>
   );
 }
