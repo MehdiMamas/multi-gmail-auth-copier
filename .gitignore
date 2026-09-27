@@ -1,0 +1,10 @@
+node_modules
+.output
+.wxt
+dist
+stats.html
+.env
+*.zip
+ente-auth-extension
+ente-auth-extension-master
+auth-extension

@@ -1,0 +1,8 @@
+{
+  "extends": "./.wxt/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx"
+  },
+  "exclude": ["node_modules", ".output", "ente-auth-extension", "ente-auth-extension-master", "auth-extension"]
+}

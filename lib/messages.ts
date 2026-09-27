@@ -1,0 +1,20 @@
+import type { Mode, PublicState, Settings } from './types';
+
+export type ExtensionRequest =
+  | { type: 'GET_STATE' }
+  | { type: 'POLL' }
+  | { type: 'SYNC'; accountEmail?: string }
+  | { type: 'SAVE_ACCOUNT'; account: { email: string; token: string; expiresAt: number } }
+  | { type: 'REMOVE_ACCOUNT'; email: string }
+  | { type: 'SET_ACCOUNT_MODE'; email: string; mode: Mode | null }
+  | { type: 'SET_SETTINGS'; settings: Partial<Settings> }
+  | { type: 'OTP_PAGE_DETECTED' }
+  | { type: 'MARK_SEEN' }
+  | { type: 'FILL_OTP'; code: string; autoSubmit: boolean }
+  | { type: 'OFFSCREEN_COPY'; text: string };
+
+export type ExtensionResponse =
+  | { ok: true; state?: PublicState; copied?: boolean }
+  | { ok: false; error: string };
+
+export type FillResponse = { filled: boolean };

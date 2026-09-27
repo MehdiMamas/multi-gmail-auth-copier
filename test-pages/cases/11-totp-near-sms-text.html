@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>11. TOTP with SMS fallback copy nearby (issue #17)</title>
+    <link rel="stylesheet" href="_shared.css" />
+</head>
+<body>
+    <a class="back" href="../index.html">&larr; Back to index</a>
+    <h1>11. TOTP with SMS fallback copy nearby (issue #17)</h1>
+    <div class="expect yes">Should show icon &mdash; explicit one-time-code overrides nearby OOB text</div>
+
+    <div>
+        <div>
+            <p>Open your authenticator app and enter the 6-digit code.</p>
+            <input
+                required
+                type="text"
+                autocomplete="one-time-code"
+                inputmode="numeric"
+                title="12345"
+                placeholder="XXXXXX"
+                class="css-14995zo ea39xtp2"
+            />
+            <p class="help">
+                Trouble signing in? We can send a code by SMS to the phone number ending in 1234,
+                or check your email for a magic link.
+            </p>
+        </div>
+    </div>
+
+    <p class="hint">
+        Field has the HTML-standard autocomplete="one-time-code" so it should be
+        detected as TOTP even though nearby boilerplate mentions SMS/phone/email.
+        Regression from #17 — broke in 0.4.0, worked in 0.3.6.
+    </p>
+</body>
+</html>

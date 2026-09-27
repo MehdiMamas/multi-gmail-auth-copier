@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>15. React-style controlled input</title>
+    <link rel="stylesheet" href="_shared.css" />
+</head>
+<body>
+    <a class="back" href="../index.html">&larr; Back to index</a>
+    <h1>15. React-style controlled input</h1>
+    <div class="expect yes">Should auto-fill, and the input event must see the new value</div>
+    <label for="react-1">Verification code</label>
+    <input id="react-1" class="single" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" />
+    <p class="hint">Open the console and fill. The input listener should already see the code.</p>
+    <script>
+        const input = document.getElementById('react-1');
+        let tracker = input.value;
+        const desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+        Object.defineProperty(input, 'value', {
+            get() { return desc.get.call(this); },
+            set(next) {
+                tracker = next;
+                desc.set.call(this, next);
+            }
+        });
+        input.addEventListener('input', () => {
+            input.dataset.eventValue = input.value;
+            input.dataset.tracker = tracker;
+        });
+    </script>
+</body>
+</html>
