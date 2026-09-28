@@ -20,6 +20,7 @@ export default defineConfig({
     host_permissions: [
       'https://gmail.googleapis.com/*',
       'https://www.googleapis.com/*',
+      'https://extensionpay.com/*',
       '<all_urls>',
     ],
     icons: {

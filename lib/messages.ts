@@ -2,6 +2,7 @@ import type { Mode, PublicState, Settings } from './types';
 
 export type ExtensionRequest =
   | { type: 'GET_STATE' }
+  | { type: 'REFRESH_BILLING' }
   | { type: 'POLL' }
   | { type: 'SYNC'; accountEmail?: string }
   | { type: 'SAVE_ACCOUNT'; account: { email: string; token: string; expiresAt: number } }

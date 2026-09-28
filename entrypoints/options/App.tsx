@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { browser } from 'wxt/browser';
 import { signInInteractive } from '~/lib/auth';
+import { FREE_ACCOUNT_LIMIT } from '~/lib/account-limit';
+import { openPaymentPage } from '~/lib/billing';
 import type { ExtensionResponse } from '~/lib/messages';
 import type { Mode, PublicState, Settings } from '~/lib/types';
 
@@ -21,7 +23,18 @@ export function App() {
   };
 
   useEffect(() => {
-    void refresh();
+    void (async () => {
+      try {
+        const response = (await browser.runtime.sendMessage({ type: 'REFRESH_BILLING' })) as ExtensionResponse;
+        if (response?.ok && response.state) {
+          setState(response.state);
+          return;
+        }
+      } catch {
+        // Fall back to the cached state below.
+      }
+      await refresh();
+    })();
     const onChange = () => {
       void refresh();
     };
@@ -63,7 +76,21 @@ export function App() {
     await refresh();
   };
 
+  const upgrade = async () => {
+    setError('');
+    setBusy('upgrade');
+    try {
+      await openPaymentPage();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not open checkout');
+    } finally {
+      setBusy('');
+    }
+  };
+
   if (!state) return <main className="mx-auto max-w-xl p-8 font-sans">Loading…</main>;
+
+  const needsUpgrade = state.accounts.length >= FREE_ACCOUNT_LIMIT && !state.paid;
 
   return (
     <main className="mx-auto max-w-xl px-6 py-8 font-sans text-ink">
@@ -77,11 +104,14 @@ export function App() {
           <button
             className="rounded-md bg-moss px-3 py-1.5 text-sm font-semibold text-paper disabled:opacity-60"
             disabled={busy !== ''}
-            onClick={() => void addAccount()}
+            onClick={() => void (needsUpgrade ? upgrade() : addAccount())}
           >
-            {busy === 'add' ? 'Waiting for Google…' : 'Add account'}
+            {busy === 'add' ? 'Waiting for Google…' : busy === 'upgrade' ? 'Opening checkout…' : needsUpgrade ? 'Upgrade' : 'Add account'}
           </button>
         </div>
+        {needsUpgrade && (
+          <p className="mt-3 text-sm text-ink/70">One Gmail account is free. Upgrade once to add more.</p>
+        )}
         {state.accounts.length === 0 ? (
           <p className="mt-3 text-sm text-ink/70">No accounts connected.</p>
         ) : (

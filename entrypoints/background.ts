@@ -3,6 +3,8 @@ import type { ExtensionRequest, ExtensionResponse, FillResponse } from '~/lib/me
 import { AuthError, HistoryExpiredError, gmailMessageUrl, pollGmail } from '~/lib/gmail';
 import { extractCode } from '~/lib/extract';
 import { refreshAccessToken } from '~/lib/auth';
+import { FREE_ACCOUNT_LIMIT, isNewAccountAllowed, UPGRADE_REQUIRED_ERROR } from '~/lib/account-limit';
+import { cachePaid, createExtPay, readPaid, refreshPaid } from '~/lib/billing';
 import { loadState, resolveMode, saveState, toPublicState } from '~/lib/storage';
 import {
   CODE_MAX_AGE_MS,
@@ -11,12 +13,18 @@ import {
   type Account,
   type CodeEntry,
   type PersistedState,
+  type PublicState,
 } from '~/lib/types';
 
 const TOKEN_SKEW_MS = 5 * 60 * 1000;
 let queue: Promise<unknown> = Promise.resolve();
 
 export default defineBackground(() => {
+  const extpay = createExtPay();
+  extpay.startBackground();
+  extpay.onPaid.addListener((user) => {
+    void cachePaid(user.paid === true);
+  });
   void ensureAlarm();
   browser.runtime.onInstalled.addListener(() => {
     void ensureAlarm();
@@ -52,27 +60,41 @@ function enqueue<T>(job: () => Promise<T>): Promise<T> {
   return run;
 }
 
+async function publish(state: PersistedState): Promise<PublicState> {
+  return toPublicState(state, await readPaid());
+}
+
 async function handleMessage(message: ExtensionRequest): Promise<ExtensionResponse> {
   switch (message.type) {
     case 'GET_STATE': {
       const state = await loadState();
-      return { ok: true, state: toPublicState(state) };
+      return { ok: true, state: await publish(state) };
+    }
+    case 'REFRESH_BILLING': {
+      await refreshPaid();
+      const state = await loadState();
+      return { ok: true, state: await publish(state) };
     }
     case 'POLL':
     case 'OTP_PAGE_DETECTED': {
       const state = await loadState();
-      if (!state.settings.fastPoll) return { ok: true, state: toPublicState(state) };
+      if (!state.settings.fastPoll) return { ok: true, state: await publish(state) };
       const next = await enqueue(() => pollAccounts());
-      return { ok: true, state: toPublicState(next) };
+      return { ok: true, state: await publish(next) };
     }
     case 'SYNC': {
       const next = await enqueue(() => pollAccounts(message.accountEmail));
-      return { ok: true, state: toPublicState(next) };
+      return { ok: true, state: await publish(next) };
     }
     case 'SAVE_ACCOUNT': {
       const next = await enqueue(async () => {
         const state = await loadState();
         const existing = state.accounts.find((account) => account.email === message.account.email);
+        const paid =
+          !existing && state.accounts.length >= FREE_ACCOUNT_LIMIT ? await refreshPaid() : await readPaid();
+        if (!isNewAccountAllowed(state.accounts.length, Boolean(existing), paid)) {
+          throw new Error(UPGRADE_REQUIRED_ERROR);
+        }
         const account: Account = {
           email: message.account.email,
           token: message.account.token,
@@ -89,7 +111,7 @@ async function handleMessage(message: ExtensionRequest): Promise<ExtensionRespon
         return state;
       });
       void enqueue(() => pollAccounts(message.account.email));
-      return { ok: true, state: toPublicState(next) };
+      return { ok: true, state: await publish(next) };
     }
     case 'REMOVE_ACCOUNT': {
       const next = await enqueue(async () => {
@@ -101,7 +123,7 @@ async function handleMessage(message: ExtensionRequest): Promise<ExtensionRespon
         await updateBadge(state.unseen);
         return state;
       });
-      return { ok: true, state: toPublicState(next) };
+      return { ok: true, state: await publish(next) };
     }
     case 'SET_ACCOUNT_MODE': {
       const next = await enqueue(async () => {
@@ -114,7 +136,7 @@ async function handleMessage(message: ExtensionRequest): Promise<ExtensionRespon
         await saveState(state);
         return state;
       });
-      return { ok: true, state: toPublicState(next) };
+      return { ok: true, state: await publish(next) };
     }
     case 'SET_SETTINGS': {
       const next = await enqueue(async () => {
@@ -123,7 +145,7 @@ async function handleMessage(message: ExtensionRequest): Promise<ExtensionRespon
         await saveState(state);
         return state;
       });
-      return { ok: true, state: toPublicState(next) };
+      return { ok: true, state: await publish(next) };
     }
     case 'MARK_SEEN': {
       const next = await enqueue(async () => {
@@ -133,7 +155,7 @@ async function handleMessage(message: ExtensionRequest): Promise<ExtensionRespon
         await updateBadge(0);
         return state;
       });
-      return { ok: true, state: toPublicState(next) };
+      return { ok: true, state: await publish(next) };
     }
     default:
       return { ok: false, error: 'Unknown message' };

@@ -21,7 +21,7 @@
     </header>
     <main class="wrap">
       <h1>Privacy policy</h1>
-      <p class="updated">Last updated September 26, 2026.</p>
+      <p class="updated">Last updated September 28, 2026.</p>
       <p>
         Keytray is a browser extension that runs on your device. This policy describes the
         Google user data it accesses and what happens to that data. The developer does not operate a
@@ -90,6 +90,7 @@
         <li>Up to 50 extracted codes, each with the sender, subject, and time. Email bodies are not stored.</li>
         <li>Ids of messages already processed, so the same code is not handled twice.</li>
         <li>Your settings (fill, copy, or do nothing; notifications; polling; auto-submit; fill chip).</li>
+        <li>Whether extra Gmail accounts are unlocked.</li>
       </ul>
 
       <h2>What is not collected by the developer</h2>
@@ -102,6 +103,16 @@
         Requests to Google (sign-in, the userinfo endpoint, and the Gmail API) are made from your
         browser to Google. Google's handling of those requests is covered by
         <a href="https://policies.google.com/privacy">Google's privacy policy</a>.
+      </p>
+      <p>
+        One Gmail account is free. More accounts require a one-time purchase. Checkout and the customer
+        login are <a href="https://extensionpay.com/">ExtensionPay</a> and
+        <a href="https://stripe.com/">Stripe</a>. A login is created with ExtensionPay only if you pay
+        or sign in there. That is not an account with the developer. The extension asks ExtensionPay
+        whether that login has paid. ExtensionPay's library stores that result in this browser, including
+        the email on the login when there is one. Card numbers are not handled by the extension. Mail,
+        codes, and Google tokens are not sent to ExtensionPay or to a server operated for this project.
+        Card payments are covered by <a href="https://stripe.com/privacy">Stripe's privacy policy</a>.
       </p>
 
       <h2>How long data is kept</h2>

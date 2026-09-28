@@ -85,4 +85,4 @@ Email bodies are not stored. The extension keeps the code, sender, subject, and 
 
 ## License
 
-You may use, copy, modify, and share this project. You may not sell it or charge for a copy. See `LICENSE`.
+You may use, copy, modify, and share this project, including a personal build with the purchase code removed. You may not sell it, charge for a copy, or profit from it. That stays with the author. See `LICENSE`.

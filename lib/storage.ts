@@ -23,13 +23,14 @@ export async function saveState(state: PersistedState): Promise<void> {
   await browser.storage.local.set({ [KEY]: state });
 }
 
-export function toPublicState(state: PersistedState): PublicState {
+export function toPublicState(state: PersistedState, paid: boolean): PublicState {
   return {
     accounts: state.accounts.map(toPublicAccount),
     codes: state.codes,
     settings: state.settings,
     unseen: state.unseen,
     lastSyncedAt: state.lastSyncedAt,
+    paid,
   };
 }
 

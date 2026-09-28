@@ -1,17 +1,13 @@
 ---
-description: Keep the Keytray home page, privacy policy, and terms in sync with the extension
+description: The published Keytray pages are on mehdimamas.dev, not the docs folder in this repo
 alwaysApply: true
 ---
 
-# Public pages stay accurate
+# Published pages are the personal site
 
-The home page, privacy policy, and terms live in this repository. A change that makes any sentence on them false must update those files in the same change.
+https://mehdimamas.dev/gmail-otp-copier/ is the real site. Google OAuth and users open that URL. Editing `docs/` in this repository does not change it.
 
-- Home: `docs/index.html`
-- Privacy: `docs/privacy.html`
-- Terms: `docs/terms.html`
-
-The same pages are also static files on the personal site, because an existing OAuth consent screen may still point at them. Keep those copies in sync when the repo pages change. Do not host these pages on GitHub Pages. Do not link them from the site navigation, home page, or project list.
+When a change makes a sentence on the home page, privacy policy, or terms false, edit these files:
 
 - Home: `D:\Upwork\mehdimamas.dev\public\gmail-otp-copier\index.html` → https://mehdimamas.dev/gmail-otp-copier/
 - Privacy: `D:\Upwork\mehdimamas.dev\public\gmail-otp-copier\privacy.html` → https://mehdimamas.dev/gmail-otp-copier/privacy/
@@ -19,13 +15,17 @@ The same pages are also static files on the personal site, because an existing O
 
 They are static files in `public/`, outside the site layout. Leave the rewrites in `D:\Upwork\mehdimamas.dev\next.config.mjs` so the clean URLs keep serving the HTML files.
 
-## Update the pages when a change affects
+That site is its own git repo. Saving the files is not enough, and a git push alone may not refresh the live pages. In the same change, commit those HTML files in `D:\Upwork\mehdimamas.dev`, push to `origin` `main`, then from that directory run `vercel deploy --prod --yes`. Do not commit other files in that repo. Do not force-push.
+
+`docs/index.html`, `docs/privacy.html`, and `docs/terms.html` in this repo are not the website. Do not treat them as the pages to update. Do not host these pages on GitHub Pages. Do not link them from the site navigation, home page, or project list.
+
+## Update the site when a change affects
 
 - OAuth scopes, Google APIs called, or permissions in `wxt.config.ts`
 - What is read from Gmail, what is stored, where it is stored, or how long it is kept (`lib/storage.ts`, `lib/types.ts`, `lib/gmail.ts`, `lib/auth.ts`)
 - Whether mail, codes, or tokens leave the browser
 - Auto-fill, auto-copy, notifications, clipboard, or the fill chip
-- Who the app is, the license, or the support contact
+- Who the app is, the license, the price, or the support contact
 
 Leave the pages alone for refactors, tests, and styling that do not change those facts.
 
@@ -35,4 +35,3 @@ Leave the pages alone for refactors, tests, and styling that do not change those
 - On the privacy and terms pages, set "Last updated" to today's date when the text changes.
 - Keep the Google API Services User Data Policy Limited Use sentence in the privacy policy.
 - If a README link or URL for these pages is wrong, fix it too.
-- Include the page edits in the same commit when the user asks to commit. Do not commit or push only to refresh the site unless they asked to publish.

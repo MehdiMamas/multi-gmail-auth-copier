@@ -50,6 +50,8 @@ export interface PublicState {
   settings: Settings;
   unseen: number;
   lastSyncedAt: number | null;
+  /** One-time unlock for more than one Gmail account. */
+  paid: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
