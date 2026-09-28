@@ -18,7 +18,27 @@ describe('gmail parsing', () => {
     expect(raw.subject).toBe('Verification code');
     expect(raw.from).toContain('noreply@google.com');
     expect(raw.body).toContain('847291');
+    expect(raw.html).toBe('');
     expect(raw.receivedAt).toBe(1700000000000);
+  });
+
+  it('keeps the html part when a plain part is also present', () => {
+    const raw = parseGmailMessage({
+      id: 'm2',
+      payload: {
+        headers: [{ name: 'Subject', value: 'Verify your email' }],
+        mimeType: 'multipart/alternative',
+        parts: [
+          { mimeType: 'text/plain', body: { data: encode('Your code is 111111') } },
+          {
+            mimeType: 'text/html',
+            body: { data: encode('<a href="https://accounts.example.com/verify?token=abc">Verify</a>') },
+          },
+        ],
+      },
+    });
+    expect(raw.body).toContain('111111');
+    expect(raw.html).toContain('https://accounts.example.com/verify?token=abc');
   });
 
   it('strips html when there is no plain part', () => {

@@ -96,7 +96,7 @@ async function render(
 
 function newestCode(codes: CodeEntry[]): CodeEntry | null {
   const fresh = codes
-    .filter((entry) => Date.now() - entry.receivedAt < CODE_MAX_AGE_MS)
+    .filter((entry) => entry.kind !== 'link' && Date.now() - entry.receivedAt < CODE_MAX_AGE_MS)
     .sort((a, b) => b.receivedAt - a.receivedAt);
   return fresh[0] ?? null;
 }

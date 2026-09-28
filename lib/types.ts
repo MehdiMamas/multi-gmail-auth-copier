@@ -9,14 +9,21 @@ export interface Account {
   needsReauth?: boolean;
 }
 
+export type EntryKind = 'code' | 'link';
+
 export interface CodeEntry {
   id: string;
   messageId: string;
   account: string;
+  /** Digits for a code. Host name for a link-only entry. */
   code: string;
   from: string;
   subject: string;
   receivedAt: number;
+  /** Missing on rows saved before link support. Those are codes. */
+  kind?: EntryKind;
+  /** Verification or sign-in URL. Present on link entries, and on a code when the same message has both. */
+  url?: string;
 }
 
 export interface Settings {

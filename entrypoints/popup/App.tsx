@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { browser } from 'wxt/browser';
+import { linkHost } from '~/lib/extract-link';
 import { gmailMessageUrl } from '~/lib/gmail';
 import type { ExtensionResponse } from '~/lib/messages';
 import type { CodeEntry, PublicState } from '~/lib/types';
@@ -63,6 +64,11 @@ export function App() {
     setTimeout(() => setCopiedId((current) => (current === entry.id ? '' : current)), 1200);
   };
 
+  const openLink = (entry: CodeEntry) => {
+    if (!entry.url?.startsWith('https://')) return;
+    void browser.tabs.create({ url: entry.url });
+  };
+
   if (!state) {
     return <Shell><p className="px-4 py-8 text-sm text-ink/70">Loading…</p></Shell>;
   }
@@ -71,7 +77,7 @@ export function App() {
     return (
       <Shell>
         <p className="px-4 py-6 text-sm leading-relaxed text-ink/80">
-          Connect a Gmail account to start collecting verification codes.
+          Connect a Gmail account to start collecting verification codes and sign-in links.
         </p>
         <div className="px-4 pb-4">
           <button className="w-full rounded-lg bg-moss px-3 py-2 text-sm font-semibold text-paper" onClick={() => void browser.runtime.openOptionsPage()}>
@@ -127,13 +133,15 @@ export function App() {
       {error && <p className="px-3 py-2 text-xs text-clay">{error}</p>}
 
       {codes.length === 0 ? (
-        <p className="px-4 py-8 text-sm text-ink/70">No codes yet. Request one, then hit Sync.</p>
+        <p className="px-4 py-8 text-sm text-ink/70">No codes or links yet. Request one, then hit Sync.</p>
       ) : (
         <ul>
           {codes.map((entry) => (
             <li key={entry.id} className="flex items-start gap-2 border-b border-line px-3 py-2.5 last:border-b-0">
               <div className="min-w-0 flex-1">
-                <div className="font-mono text-lg tracking-wider text-ink">{entry.code}</div>
+                <div className="font-mono text-lg tracking-wider text-ink">
+                  {entry.kind === 'link' ? linkHost(entry.url ?? '') || entry.code : entry.code}
+                </div>
                 <div className="truncate text-xs text-ink/70">{senderName(entry.from)} · {entry.subject || 'No subject'}</div>
                 <div className="mt-0.5 text-[11px] text-ink/50">
                   {filter === 'all' ? `${entry.account} · ` : ''}
@@ -141,12 +149,29 @@ export function App() {
                 </div>
               </div>
               <div className="flex shrink-0 flex-col gap-1">
-                <button
-                  className="rounded-md border border-line bg-white px-2 py-1 text-xs font-semibold"
-                  onClick={() => void copy(entry)}
-                >
-                  {copiedId === entry.id ? 'Copied' : 'Copy'}
-                </button>
+                {entry.kind === 'link' ? (
+                  <button
+                    className="rounded-md border border-line bg-white px-2 py-1 text-xs font-semibold"
+                    onClick={() => openLink(entry)}
+                  >
+                    Open link
+                  </button>
+                ) : (
+                  <button
+                    className="rounded-md border border-line bg-white px-2 py-1 text-xs font-semibold"
+                    onClick={() => void copy(entry)}
+                  >
+                    {copiedId === entry.id ? 'Copied' : 'Copy'}
+                  </button>
+                )}
+                {entry.kind !== 'link' && entry.url && (
+                  <button
+                    className="rounded-md border border-line bg-white px-2 py-1 text-xs font-semibold"
+                    onClick={() => openLink(entry)}
+                  >
+                    Open link
+                  </button>
+                )}
                 <button
                   className="rounded-md border border-line bg-white px-2 py-1 text-xs font-semibold"
                   onClick={() => void browser.tabs.create({ url: gmailMessageUrl(entry.account, entry.messageId) })}

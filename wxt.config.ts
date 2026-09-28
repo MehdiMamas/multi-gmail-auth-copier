@@ -15,7 +15,7 @@ export default defineConfig({
   manifest: ({ mode }) => ({
     name: 'Keytray',
     description:
-      'Reads verification codes from your Gmail accounts and can auto-fill or copy them.',
+      'Reads verification codes and sign-in links from your Gmail accounts. Codes can be filled or copied. Links open when you choose.',
     ...(mode === 'store' ? {} : { key: EXTENSION_KEY }),
     permissions: ['identity', 'storage', 'alarms', 'offscreen', 'notifications', 'scripting'],
     host_permissions: [

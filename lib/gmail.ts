@@ -16,7 +16,10 @@ export interface ParsedMessage {
   id: string;
   from: string;
   subject: string;
+  /** Plain text, or HTML converted to text when the message has no plain part. */
   body: string;
+  /** Raw HTML part, kept so verification buttons can be read from hrefs. */
+  html: string;
   receivedAt: number;
 }
 
@@ -120,10 +123,11 @@ export function parseGmailMessage(raw: GmailMessage): ParsedMessage {
   const subject = header(headers, 'Subject');
   const from = header(headers, 'From');
   const plain = findPart(raw.payload, 'text/plain');
-  const html = findPart(raw.payload, 'text/html');
-  const body = plain ? decodeBody(plain) : html ? htmlToText(decodeBody(html)) : raw.snippet ?? '';
+  const htmlPart = findPart(raw.payload, 'text/html');
+  const html = htmlPart ? decodeBody(htmlPart) : '';
+  const body = plain ? decodeBody(plain) : html ? htmlToText(html) : raw.snippet ?? '';
   const receivedAt = raw.internalDate ? Number(raw.internalDate) : Date.parse(header(headers, 'Date')) || Date.now();
-  return { id: raw.id, from, subject, body, receivedAt };
+  return { id: raw.id, from, subject, body, html, receivedAt };
 }
 
 function header(headers: GmailHeader[], name: string): string {

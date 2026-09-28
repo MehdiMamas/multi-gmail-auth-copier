@@ -85,3 +85,117 @@ export const emailFixtures: EmailFixture[] = [
     expect: null,
   },
 ];
+
+export interface LinkFixture {
+  name: string;
+  subject: string;
+  body: string;
+  html: string;
+  /** Expected verification URL, or null when the message must not yield one. */
+  url: string | null;
+  /** When set, extractCode must still return this and must not treat the URL as a code. */
+  code?: string | null;
+}
+
+export const linkFixtures: LinkFixture[] = [
+  {
+    name: 'verify button beats unsubscribe',
+    subject: 'Verify your email',
+    body: '',
+    html: '<p>Verify your email to finish signing up.</p><a href="https://accounts.example.com/verify?token=abc">Verify email</a><a href="https://example.com/unsubscribe">Unsubscribe</a>',
+    url: 'https://accounts.example.com/verify?token=abc',
+  },
+  {
+    name: 'plain magic sign-in url',
+    subject: 'Sign in',
+    body: 'Click the link below to sign in: https://app.example.com/login?token=xyz',
+    html: '',
+    url: 'https://app.example.com/login?token=xyz',
+  },
+  {
+    name: 'google wrapper unwraps to the verify url',
+    subject: 'Verify your email',
+    body: '',
+    html: '<a href="https://www.google.com/url?q=https%3A%2F%2Faccounts.example.com%2Fverify%3Ftoken%3Dabc">Verify email</a>',
+    url: 'https://accounts.example.com/verify?token=abc',
+  },
+  {
+    name: 'outlook safelink unwraps',
+    subject: 'Verify your email',
+    body: '',
+    html: '<a href="https://nam01.safelinks.protection.outlook.com/?url=https%3A%2F%2Faccounts.example.com%2Fverify%3Ftoken%3Dabc">Verify email</a>',
+    url: 'https://accounts.example.com/verify?token=abc',
+  },
+  {
+    name: 'unsubscribe footer is not a verification link',
+    subject: 'Weekly notes',
+    body: 'Thanks for reading.',
+    html: '<a href="https://news.example.com/unsubscribe?id=1">Unsubscribe</a>',
+    url: null,
+  },
+  {
+    name: 'password reset subject is rejected',
+    subject: 'Reset your password',
+    body: '',
+    html: '<a href="https://accounts.example.com/reset?token=abc">Continue</a>',
+    url: null,
+  },
+  {
+    name: 'reset path is rejected',
+    subject: 'Account help',
+    body: 'Click continue.',
+    html: '<a href="https://accounts.example.com/reset?token=abc">Continue</a>',
+    url: null,
+  },
+  {
+    name: 'account deletion is rejected',
+    subject: 'Confirm account deletion',
+    body: '',
+    html: '<a href="https://accounts.example.com/verify-account-deletion?token=abc">Continue</a>',
+    url: null,
+  },
+  {
+    name: 'opaque tracker is skipped',
+    subject: 'Verify your email',
+    body: '',
+    html: '<a href="https://click.sendgrid.net/ls/click?upn=abc">Verify email</a>',
+    url: null,
+  },
+  {
+    name: 'http link is rejected',
+    subject: 'Verify your email',
+    body: '',
+    html: '<a href="http://accounts.example.com/verify?token=abc">Verify email</a>',
+    url: null,
+  },
+  {
+    name: 'code email url is not a code or a verification link',
+    subject: 'Verification code',
+    body: 'Your code is 847291. Visit https://example.com/help',
+    html: '',
+    url: null,
+    code: '847291',
+  },
+  {
+    name: 'extensionpay login link in plain text',
+    subject: 'Log in to KeyTray',
+    body: 'Hey! We received a login request to this email address for the browser extension KeyTray. Click this link to log in: https://extensionpay.com/extension/example/reactivate-from-email?uuid=00000000-0000-4000-8000-000000000001 This link will expire in 2 days. If you did not request a login link, please contact the extension developer and do not click the link.',
+    html: '',
+    url: 'https://extensionpay.com/extension/example/reactivate-from-email?uuid=00000000-0000-4000-8000-000000000001',
+  },
+  {
+    name: 'mailgun click tracker yields the visible login url',
+    subject: 'Log in to KeyTray',
+    body: 'Click this link to log in: https://extensionpay.com/extension/example/reactivate-from-email?uuid=00000000-0000-4000-8000-000000000001',
+    html: '<a href="https://email.mg.extensionpay.com/c/opaque-token">Log in to KeyTray</a><a href="https://email.mg.extensionpay.com/c/opaque-token">https://extensionpay.com/extension/example/reactivate-from-email?uuid=00000000-0000-4000-8000-000000000001</a>',
+    url: 'https://extensionpay.com/extension/example/reactivate-from-email?uuid=00000000-0000-4000-8000-000000000001',
+  },
+  {
+    name: 'code and verify link can both be found',
+    subject: 'Verify your email',
+    body: 'Your verification code is 111222.',
+    html: '<a href="https://accounts.example.com/verify?token=abc">Verify email</a>',
+    url: 'https://accounts.example.com/verify?token=abc',
+    code: '111222',
+  },
+];

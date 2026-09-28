@@ -11,6 +11,8 @@ export type ExtensionRequest =
   | { type: 'SET_SETTINGS'; settings: Partial<Settings> }
   | { type: 'OTP_PAGE_DETECTED' }
   | { type: 'MARK_SEEN' }
+  | { type: 'CLEAR_HISTORY' }
+  | { type: 'ARCHIVE_HISTORY' }
   | { type: 'FILL_OTP'; code: string; autoSubmit: boolean }
   | { type: 'OFFSCREEN_COPY'; text: string };
 

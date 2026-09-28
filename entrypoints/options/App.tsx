@@ -65,15 +65,18 @@ export function App() {
     if (response?.ok && response.state) setState(response.state);
   };
 
-  const clearHistory = async () => {
-    const stored = await browser.storage.local.get('otpState');
-    const current = stored.otpState as Record<string, unknown> | undefined;
-    if (!current) return;
-    await browser.storage.local.set({
-      otpState: { ...current, codes: [], processedIds: [], unseen: 0, lastSyncedAt: null },
-    });
-    await browser.action.setBadgeText({ text: '' });
-    await refresh();
+  const forgetHistory = async (type: 'CLEAR_HISTORY' | 'ARCHIVE_HISTORY') => {
+    setError('');
+    setBusy(type);
+    try {
+      const response = (await browser.runtime.sendMessage({ type })) as ExtensionResponse;
+      if (!response?.ok) throw new Error(response?.error || 'Could not update history');
+      if (response.state) setState(response.state);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not update history');
+    } finally {
+      setBusy('');
+    }
   };
 
   const upgrade = async () => {
@@ -175,7 +178,7 @@ export function App() {
           </select>
         </label>
         <Toggle
-          label="Desktop notification when a code arrives"
+          label="Desktop notification when a code or link arrives"
           checked={state.settings.notifications}
           onChange={(notifications) => void updateSettings({ notifications })}
         />
@@ -194,9 +197,25 @@ export function App() {
           checked={state.settings.showFillChip}
           onChange={(showFillChip) => void updateSettings({ showFillChip })}
         />
-        <button className="rounded-md border border-line px-3 py-1.5 text-sm" onClick={() => void clearHistory()}>
-          Clear history
-        </button>
+        <div className="flex flex-wrap gap-2 pt-1">
+          <button
+            className="rounded-md border border-line px-3 py-1.5 text-sm disabled:opacity-60"
+            disabled={busy !== ''}
+            onClick={() => void forgetHistory('CLEAR_HISTORY')}
+          >
+            {busy === 'CLEAR_HISTORY' ? 'Reading today\'s mail…' : 'Clear history'}
+          </button>
+          <button
+            className="rounded-md border border-line px-3 py-1.5 text-sm disabled:opacity-60"
+            disabled={busy !== ''}
+            onClick={() => void forgetHistory('ARCHIVE_HISTORY')}
+          >
+            Archive history
+          </button>
+        </div>
+        <p className="text-xs text-ink/60">
+          Clear history forgets what was already read and syncs today’s mail again. Archive history only hides the list.
+        </p>
       </section>
     </main>
   );

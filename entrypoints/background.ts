@@ -2,6 +2,7 @@ import { browser } from 'wxt/browser';
 import type { ExtensionRequest, ExtensionResponse, FillResponse } from '~/lib/messages';
 import { AuthError, HistoryExpiredError, gmailMessageUrl, pollGmail } from '~/lib/gmail';
 import { extractCode } from '~/lib/extract';
+import { extractVerificationLink, linkHost } from '~/lib/extract-link';
 import { refreshAccessToken } from '~/lib/auth';
 import { FREE_ACCOUNT_LIMIT, isNewAccountAllowed, UPGRADE_REQUIRED_ERROR } from '~/lib/account-limit';
 import { cachePaid, createExtPay, readPaid, refreshPaid } from '~/lib/billing';
@@ -157,6 +158,31 @@ async function handleMessage(message: ExtensionRequest): Promise<ExtensionRespon
       });
       return { ok: true, state: await publish(next) };
     }
+    case 'CLEAR_HISTORY': {
+      const next = await enqueue(async () => {
+        const state = await loadState();
+        state.codes = [];
+        state.processedIds = [];
+        state.unseen = 0;
+        state.lastSyncedAt = null;
+        for (const account of state.accounts) delete account.historyId;
+        await saveState(state);
+        await updateBadge(0);
+        return pollAccounts();
+      });
+      return { ok: true, state: await publish(next) };
+    }
+    case 'ARCHIVE_HISTORY': {
+      const next = await enqueue(async () => {
+        const state = await loadState();
+        state.codes = [];
+        state.unseen = 0;
+        await saveState(state);
+        await updateBadge(0);
+        return state;
+      });
+      return { ok: true, state: await publish(next) };
+    }
     default:
       return { ok: false, error: 'Unknown message' };
   }
@@ -230,15 +256,18 @@ async function pollOne(state: PersistedState, account: Account): Promise<CodeEnt
     if (state.processedIds.includes(key)) continue;
     state.processedIds.push(key);
     const code = extractCode(message.subject, message.body);
-    if (!code) continue;
+    const link = extractVerificationLink(message.subject, message.body, message.html);
+    if (!code && !link) continue;
     found.push({
       id: key,
       messageId: message.id,
       account: account.email,
-      code,
+      code: code ?? linkHost(link?.url ?? ''),
       from: message.from,
       subject: message.subject,
       receivedAt: message.receivedAt,
+      kind: code ? 'code' : 'link',
+      ...(link ? { url: link.url } : {}),
     });
   }
   return found;
@@ -267,6 +296,10 @@ async function actOnNewest(state: PersistedState, fresh: CodeEntry[]): Promise<v
   if (!newest) return;
   const account = state.accounts.find((item) => item.email === newest.account);
   if (!account) return;
+  if (newest.kind === 'link') {
+    await notifyLink(state, newest);
+    return;
+  }
   const mode = resolveMode(account, state.settings);
 
   if (mode === 'autofill') {
@@ -333,12 +366,29 @@ async function copyText(text: string): Promise<void> {
 }
 
 async function openNotifiedMessage(notificationId: string): Promise<void> {
-  if (!notificationId.startsWith('code-')) return;
-  const entryId = notificationId.slice('code-'.length);
+  const link = notificationId.startsWith('link-');
+  const code = notificationId.startsWith('code-');
+  if (!link && !code) return;
+  const entryId = notificationId.slice(link ? 'link-'.length : 'code-'.length);
   const state = await loadState();
   const entry = state.codes.find((item) => item.id === entryId);
   if (!entry) return;
+  if (link && entry.url?.startsWith('https://')) {
+    await browser.tabs.create({ url: entry.url });
+    return;
+  }
   await browser.tabs.create({ url: gmailMessageUrl(entry.account, entry.messageId) });
+}
+
+async function notifyLink(state: PersistedState, entry: CodeEntry): Promise<void> {
+  if (!state.settings.notifications || !entry.url) return;
+  const host = linkHost(entry.url);
+  await browser.notifications.create(`link-${entry.id}`, {
+    type: 'basic',
+    iconUrl: browser.runtime.getURL('/icons/icon128.png'),
+    title: host || 'Verification link',
+    message: `${senderName(entry.from)}. Open the verification link.`,
+  });
 }
 
 async function notify(state: PersistedState, entry: CodeEntry, detail: string): Promise<void> {
