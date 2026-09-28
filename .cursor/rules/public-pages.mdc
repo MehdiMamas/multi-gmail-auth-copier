@@ -15,7 +15,7 @@ When a change makes a sentence on the home page, privacy policy, or terms false,
 
 They are static files in `public/`, outside the site layout. Leave the rewrites in `D:\Upwork\mehdimamas.dev\next.config.mjs` so the clean URLs keep serving the HTML files.
 
-That site is its own git repo. Saving the files is not enough, and a git push alone may not refresh the live pages. In the same change, commit those HTML files in `D:\Upwork\mehdimamas.dev`, push to `origin` `main`, then from that directory run `vercel deploy --prod --yes`. Do not commit other files in that repo. Do not force-push.
+That site is its own git repo. Saving the files is not enough. A git push to `main` can be blocked when the commit author is not allowed to deploy. In the same change, commit those HTML files in `D:\Upwork\mehdimamas.dev`, push to `origin` `main`, then from that directory run `vercel deploy --prod --yes --scope mehdimamas-projects`. Do not commit other files in that repo. Do not force-push.
 
 `docs/index.html`, `docs/privacy.html`, and `docs/terms.html` in this repo are not the website. Do not treat them as the pages to update. Do not host these pages on GitHub Pages. Do not link them from the site navigation, home page, or project list.
 
