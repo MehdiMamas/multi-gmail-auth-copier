@@ -1,11 +1,12 @@
 import { defineConfig } from 'wxt';
 
 /**
- * Stable unpacked-install id: kkaljelcngliippihmklimildhmmhoml
- * OAuth redirect: https://kkaljelcngliippihmklimildhmmhoml.chromiumapp.org/
+ * Chrome Web Store public key. Unpacked installs use the store id:
+ * kfkmcgkbicdmgdodjjindmnpofbcmoji
+ * OAuth redirect: https://kfkmcgkbicdmgdodjjindmnpofbcmoji.chromiumapp.org/
  */
 const EXTENSION_KEY =
-  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAslm8PtehGFZWypx5zBGsCielypNE75s734s1+Jfnyq4ngCCs5vCnXTGhndlLXDx1rc5jcjr55hkJa7WlUdmP08x5Qn0NudgTp56we0gKbOEwXhedhK6QwsGIbgFkgQ8JooOzmExdr0eiFqM83uqF9EwbkLtX1qNPlqRnQJoLACHtMjOSysGXkrRgsgcYw73NUXnHe5IR3uhlKBAuLRkJw+YIfHA185GDb1kWBlpI5+8Fd3OoHmnMJtgstL2Hdn8XDK9YoMz6wA90yr7dRaGTYhIpiqwPKJy+M5wtnO/fHUIChGK9xVHQ0MWXxPzf/mVu8sXOl0d2HDeA5rKk+4obXwIDAQAB';
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxWE2CyM/NSKkGAyPulGU2+P5mE8E88+Wj3bcQXCB0ltWTRMm7x5WzKyfqdzYcaErkzgU66gzz5+fCTUnY56a1GLKn/y2X5o6ZLetJ/G0FNhm0VeB1KoOOjoCSIWu1Xvek0Y6waVJcuDBZLI2TTHJ7xlXfyKp+1H0+9PVV/rdFLhDxWNiTasFav8cmqRZ1KgitwvAyV9DvqrHF1BpRvnThSb5Fx+QDbbmm6gtbpmcbTNIxmuu7Jd8Cp9X64AwmU0K3qL6ByYY2GqJDYLy+l8WGmSgw3fiqzzRZVLyWsdDwDOH/yPwxhq+JsprUXc/T0+GwXrQbiGzflvIoN/ooJ5Q9wIDAQAB';
 
 export default defineConfig({
   modules: ['@wxt-dev/module-react'],

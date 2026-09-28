@@ -1,8 +1,8 @@
 # Setup
 
-The extension id is fixed, so every unpacked install uses the same Google sign-in redirect:
+The extension id is fixed to the Chrome Web Store item, so every unpacked install uses the same Google sign-in redirect:
 
-`https://kkaljelcngliippihmklimildhmmhoml.chromiumapp.org/`
+`https://kfkmcgkbicdmgdodjjindmnpofbcmoji.chromiumapp.org/`
 
 You need a free Google Cloud project. No billing account. The OAuth app stays in Testing mode. Add yourself and friends as test users (up to 100). Friends will see an "unverified app" screen once and click Continue.
 
@@ -19,7 +19,7 @@ You need a free Google Cloud project. No billing account. The OAuth app stays in
    - Publishing status: **Testing**
 4. APIs & Services → Credentials → Create credentials → **OAuth client ID**
    - Application type: **Web application**
-   - Authorized redirect URIs: `https://kkaljelcngliippihmklimildhmmhoml.chromiumapp.org/`
+   - Authorized redirect URIs: `https://kfkmcgkbicdmgdodjjindmnpofbcmoji.chromiumapp.org/`
 5. Copy the client id (it ends in `.apps.googleusercontent.com`).
 
 ## 2. Build
@@ -40,7 +40,7 @@ npm test
 npm run build
 ```
 
-Load `.output/chrome-mv3` unpacked. That folder includes the extension `key`, so the install id stays `kkaljelcngliippihmklimildhmmhoml`.
+Load `.output/chrome-mv3` unpacked. That folder includes the extension `key`, so the install id stays `kfkmcgkbicdmgdodjjindmnpofbcmoji`, the same id as the Chrome Web Store item.
 
 To send that same unpacked build to friends:
 
@@ -54,7 +54,7 @@ The Chrome Web Store rejects a package that contains `key`. Use this zip for the
 npm run zip
 ```
 
-Zips are written under `.output`. After the store assigns an extension id, add `https://<that-id>.chromiumapp.org/` as an authorized redirect URI on the same OAuth client.
+Zips are written under `.output`. The store package omits `key`; Chrome still assigns `kfkmcgkbicdmgdodjjindmnpofbcmoji` because that id belongs to this public key. The authorized redirect URI is `https://kfkmcgkbicdmgdodjjindmnpofbcmoji.chromiumapp.org/`.
 
 ## 3. Install (you and friends)
 
