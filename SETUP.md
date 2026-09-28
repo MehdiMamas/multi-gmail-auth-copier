@@ -40,13 +40,21 @@ npm test
 npm run build
 ```
 
-Load `.output/chrome-mv3` unpacked, or zip it for friends:
+Load `.output/chrome-mv3` unpacked. That folder includes the extension `key`, so the install id stays `kkaljelcngliippihmklimildhmmhoml`.
+
+To send that same unpacked build to friends:
+
+```bash
+npm run zip:sideload
+```
+
+The Chrome Web Store rejects a package that contains `key`. Use this zip for the store upload:
 
 ```bash
 npm run zip
 ```
 
-The zip is written under `.output`.
+Zips are written under `.output`. After the store assigns an extension id, add `https://<that-id>.chromiumapp.org/` as an authorized redirect URI on the same OAuth client.
 
 ## 3. Install (you and friends)
 

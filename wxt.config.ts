@@ -9,11 +9,13 @@ const EXTENSION_KEY =
 
 export default defineConfig({
   modules: ['@wxt-dev/module-react'],
-  manifest: {
+  // `npm run zip` uses --mode store. The Chrome Web Store rejects `key`.
+  // Unpacked builds keep it so the OAuth redirect id stays stable.
+  manifest: ({ mode }) => ({
     name: 'Keytray',
     description:
       'Reads verification codes from your Gmail accounts and can auto-fill or copy them.',
-    key: EXTENSION_KEY,
+    ...(mode === 'store' ? {} : { key: EXTENSION_KEY }),
     permissions: ['identity', 'storage', 'alarms', 'offscreen', 'notifications', 'scripting'],
     host_permissions: [
       'https://gmail.googleapis.com/*',
@@ -35,5 +37,5 @@ export default defineConfig({
         128: 'icons/icon128.png',
       },
     },
-  },
+  }),
 });
